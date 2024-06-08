@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import JSConfetti from "js-confetti";
+import { config } from "../config";
 
 const jsConfetti = new JSConfetti();
 
@@ -10,9 +11,8 @@ type TilePosition = {
   index: number;
 };
 
-export const columns = 4; // TODO Add to config instead
-export const rows = 4; // TODO Add to config instead
-export const numberOfTiles = columns * rows;
+const { rows, columns } = config;
+const numberOfTiles = columns * rows;
 
 export const useTiles = () => {
   const [boardTiles, setBoardTiles] = useState<Tile[]>([]);

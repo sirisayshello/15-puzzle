@@ -2,15 +2,15 @@ import { Button } from "../Button/Button";
 import { EmptyTile, Tile } from "../Tile/Tile";
 import { useEffect } from "react";
 import { SolvedModal } from "../SolvedModal/SolvedModal";
-import { useTiles, columns, rows, numberOfTiles } from "../../hooks/useTiles";
+import { useTiles } from "../../hooks/useTiles";
+import { config } from "../../config";
+
+const { rows, columns } = config;
+const numberOfTiles = rows * columns;
 
 export const Board = () => {
   const { boardTiles, shuffle, fillBoard, move, modal } = useTiles();
-  let maxWidth = "";
-
-  if (columns < 11) {
-    maxWidth = "max-w-xl";
-  }
+  const maxWidth = columns < 11 ? "max-w-xl" : "";
 
   useEffect(() => {
     fillBoard();
