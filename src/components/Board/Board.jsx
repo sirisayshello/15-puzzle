@@ -1,16 +1,18 @@
-import { useState } from "react";
-import { ShuffleButton } from "../Button/ShuffleButton";
+import { useRef, useState } from "react";
+import { Button } from "../Button/Button";
 import { EmptyTile, Tile } from "../Tile/Tile";
 import { useEffect } from "react";
+import { SolvedModal } from "../WinModal/SolvedModal";
 
-const columns = 2; // Add to config instead
-const rows = 2; // Add to config instead
+const columns = 2; // TODO Add to config instead
+const rows = 2; // TODO Add to config instead
 const numberOfTiles = columns * rows;
 let tileNumber = 1;
 const baseEmptyTile = { number: numberOfTiles };
 
 export const Board = () => {
   const [boardTiles, setBoardTiles] = useState([]);
+  const modal = useRef();
 
   const shuffle = (array) => {
     array.sort(() => Math.random() - 0.5);
@@ -39,13 +41,15 @@ export const Board = () => {
     return { row, column, index };
   };
 
-  const checkWin = (tiles) => {
-    const hasWon = tiles.every((tile, index) => {
+  const checkIfSolved = (tiles) => {
+    const puzzleSolved = tiles.every((tile, index) => {
       console.log(tile.number === index + 1);
       return tile.number === index + 1;
     });
-    if (hasWon) {
-      setTimeout(() => window.alert("WINNER"), 0);
+    if (puzzleSolved) {
+      // setTimeout(() => window.alert("WINNER"), 0);
+      console.log("you did it!");
+      modal.current.showModal();
     }
   };
 
@@ -88,41 +92,43 @@ export const Board = () => {
       // Empty tile will be put where you clicked
       updatedTiles[clickedIndex] = baseEmptyTile;
       setBoardTiles(updatedTiles);
-      // Check if win
-      checkWin(updatedTiles);
+      checkIfSolved(updatedTiles);
     }
   };
 
-  // Set up the board on start
   useEffect(() => {
     fillBoard();
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-8">
-      <div className="bg-board-orange dark:bg-dark-orange p-2 rounded-md">
-        <div
-          style={{
-            gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
-          }}
-          className={` bg-board-orange dark:bg-dark-orange h-80 w-80 grid gap-1 p-1 border-2 border-tile-pink rounded-md`}
-        >
-          {boardTiles.map((tile, index) => {
-            if (tile.number === numberOfTiles) {
-              return <EmptyTile key={tile.number} />;
-            }
-            return (
-              <Tile
-                key={tile.number}
-                number={tile.number}
-                move={() => move(index)}
-              />
-            );
-          })}
+    <>
+      <SolvedModal ref={modal} />
+
+      <div className="flex flex-col items-center gap-8">
+        <div className="bg-board-orange dark:bg-dark-orange p-2 rounded-md">
+          <div
+            style={{
+              gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+            }}
+            className={` bg-board-orange dark:bg-dark-orange h-80 w-80 grid gap-1 p-1 border-2 border-tile-pink rounded-md`}
+          >
+            {boardTiles.map((tile, index) => {
+              if (tile.number === numberOfTiles) {
+                return <EmptyTile key={tile.number} />;
+              }
+              return (
+                <Tile
+                  key={tile.number}
+                  number={tile.number}
+                  move={() => move(index)}
+                />
+              );
+            })}
+          </div>
         </div>
+        <Button onclick={() => shuffle(boardTiles)}>{"SLUMPA"}</Button>
       </div>
-      <ShuffleButton shuffle={() => shuffle(boardTiles)} />
-    </div>
+    </>
   );
 };
