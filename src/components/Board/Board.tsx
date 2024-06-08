@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
 import { Button } from "../Button/Button";
 import { EmptyTile, Tile } from "../Tile/Tile";
 import { useEffect } from "react";
-import { SolvedModal } from "../WinModal/SolvedModal";
+import { SolvedModal } from "../SolvedModal/SolvedModal";
 import { useTiles, columns, rows, numberOfTiles } from "../../hooks/useTiles";
 
 export const Board = () => {
@@ -14,7 +13,7 @@ export const Board = () => {
 
   return (
     <>
-      <SolvedModal ref={modal} close={() => modal.current.close()} />
+      <SolvedModal ref={modal} close={() => modal.current?.close()} />
 
       <div className="flex flex-col items-center gap-8">
         <div className="bg-board-orange dark:bg-dark-orange p-2 rounded-md">
@@ -39,7 +38,7 @@ export const Board = () => {
             })}
           </div>
         </div>
-        <Button onclick={() => shuffle(boardTiles)}>{"SLUMPA"}</Button>
+        <Button onClick={() => shuffle(boardTiles)}>{"SLUMPA"}</Button>
       </div>
     </>
   );

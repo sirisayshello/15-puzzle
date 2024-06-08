@@ -1,36 +1,43 @@
 import { useRef, useState } from "react";
 
+export type Tile = { number: number };
+type TilePosition = {
+  row: number;
+  column: number;
+  index: number;
+};
+
 export const columns = 2; // TODO Add to config instead
 export const rows = 2; // TODO Add to config instead
 export const numberOfTiles = columns * rows;
 
 export const useTiles = () => {
-  const [boardTiles, setBoardTiles] = useState([]);
-  const modal = useRef();
+  const [boardTiles, setBoardTiles] = useState<Tile[]>([]);
+  const modal = useRef<HTMLDialogElement>(null);
 
   let tileNumber = 1;
-  const baseEmptyTile = { number: numberOfTiles };
+  const baseEmptyTile: Tile = { number: numberOfTiles };
 
-  const shuffle = (array) => {
+  const shuffle = (array: Tile[]): void => {
     array.sort(() => Math.random() - 0.5);
     setBoardTiles([...array]);
   };
 
-  const fillBoard = () => {
-    const tiles = [baseEmptyTile];
+  const fillBoard = (): void => {
+    const tiles: Tile[] = [baseEmptyTile];
 
     for (let i = 1; i < numberOfTiles; i++) {
-      let tile = { number: tileNumber++ };
+      const tile: Tile = { number: tileNumber++ };
       tiles.push(tile);
     }
     shuffle(tiles);
     setBoardTiles(tiles);
   };
 
-  const getEmptyTileIndex = () =>
+  const getEmptyTileIndex = (): number =>
     boardTiles.findIndex((tile) => tile.number === numberOfTiles);
 
-  const getPositionOfTile = (index) => {
+  const getPositionOfTile = (index: number): TilePosition => {
     // Get tile's position and thereby which row and column it's in
     const tilePosition = index / columns;
     const row = Math.floor(tilePosition);
@@ -38,18 +45,19 @@ export const useTiles = () => {
     return { row, column, index };
   };
 
-  const checkIfSolved = (tiles) => {
-    const puzzleSolved = tiles.every((tile, index) => {
+  const checkIfSolved = (tiles: Tile[]) => {
+    const puzzleSolved: boolean = tiles.every((tile, index) => {
       return tile.number === index + 1;
     });
+
     if (puzzleSolved) {
-      modal.current.showModal();
+      modal.current?.showModal();
     }
   };
 
-  const move = (clickedIndex) => {
-    const emptyTile = getPositionOfTile(getEmptyTileIndex());
-    const clickedTile = getPositionOfTile(clickedIndex);
+  const move = (clickedIndex: number) => {
+    const emptyTile: TilePosition = getPositionOfTile(getEmptyTileIndex());
+    const clickedTile: TilePosition = getPositionOfTile(clickedIndex);
 
     // check if tile is in same row or column as empty tile
     if (
@@ -57,7 +65,7 @@ export const useTiles = () => {
       clickedTile.column === emptyTile.column
     ) {
       // Move by updating the array
-      const updatedTiles = [...boardTiles];
+      const updatedTiles: Tile[] = [...boardTiles];
 
       if (clickedTile.row === emptyTile.row) {
         // Move tiles in the same row
