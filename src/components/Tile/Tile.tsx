@@ -6,7 +6,7 @@ type TileProps = {
 const Tile = ({ number, move }: TileProps) => {
   return (
     <div
-      className="flex justify-center items-center text-3xl bg-tile-pink dark:bg-dark-pink rounded hover:cursor-pointer"
+      className="flex justify-center items-center text-[clamp(1rem,3vw,2.5rem)] aspect-square bg-tile-pink dark:bg-dark-pink rounded hover:cursor-pointer"
       onClick={move}
     >
       <p>{number}</p>

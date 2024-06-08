@@ -1,4 +1,7 @@
 import { useRef, useState } from "react";
+import JSConfetti from "js-confetti";
+
+const jsConfetti = new JSConfetti();
 
 export type Tile = { number: number };
 type TilePosition = {
@@ -7,8 +10,8 @@ type TilePosition = {
   index: number;
 };
 
-export const columns = 2; // TODO Add to config instead
-export const rows = 2; // TODO Add to config instead
+export const columns = 4; // TODO Add to config instead
+export const rows = 4; // TODO Add to config instead
 export const numberOfTiles = columns * rows;
 
 export const useTiles = () => {
@@ -51,7 +54,8 @@ export const useTiles = () => {
     });
 
     if (puzzleSolved) {
-      modal.current?.showModal();
+      jsConfetti.addConfetti();
+      setTimeout(() => modal.current?.showModal(), 2000);
     }
   };
 
