@@ -10,7 +10,7 @@ const numberOfTiles = rows * columns;
 
 export const Board = () => {
   const { boardTiles, shuffle, fillBoard, move, modal } = useTiles();
-  const maxWidth = columns < 11 ? "max-w-xl" : "";
+  const maxWidth = columns < 11 ? "max-w-md" : "";
 
   useEffect(() => {
     fillBoard();
